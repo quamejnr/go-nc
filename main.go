@@ -61,6 +61,6 @@ func main() {
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 	_ = <-sigChan
-  fmt.Println("exiting...")
+	fmt.Println("exiting...")
 
 }
