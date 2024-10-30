@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
 	"net"
 	"os"
@@ -39,7 +38,7 @@ func main() {
 
 				request = append(request, line...)
 
-				if bytes.Compare(line, []byte("\n")) == 0 {
+				if string(line) == "\n" || string(line) == "\r\n" {
 					break
 				}
 			}
@@ -49,18 +48,21 @@ func main() {
 				fmt.Println("error sending request:", err)
 				return
 			}
-			buf := make([]byte, 4096)
-			_, err = conn.Read(buf)
-			if err != nil {
-				fmt.Println("error reading request:", err)
+
+			// read response from connection
+			scanner := bufio.NewScanner(conn)
+			for scanner.Scan() {
+				fmt.Println(scanner.Text())
 			}
-			fmt.Printf("%s\n\n", string(buf))
+			if err = scanner.Err(); err != nil {
+				fmt.Println("error reading response:", err)
+			}
 		}
 	}()
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
-	_ = <-sigChan
+	<-sigChan
 	fmt.Println("exiting...")
 
 }
