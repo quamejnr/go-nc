@@ -50,13 +50,12 @@ func main() {
 			}
 
 			// read response from connection
-			scanner := bufio.NewScanner(conn)
-			for scanner.Scan() {
-				fmt.Println(scanner.Text())
-			}
-			if err = scanner.Err(); err != nil {
+			buf := make([]byte, 4096)
+			_, err = conn.Read(buf)
+			if err != nil {
 				fmt.Println("error reading response:", err)
 			}
+			fmt.Printf("%s\n\n", string(buf))
 		}
 	}()
 
