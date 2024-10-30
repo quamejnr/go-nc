@@ -18,7 +18,7 @@ func main() {
 	}
 
 	conn, err := net.Dial("tcp", os.Args[1])
-	if conn == nil && err != nil {
+	if err != nil {
 		fmt.Println("error connecting to host:", err)
 		return
 	}
