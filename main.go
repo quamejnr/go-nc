@@ -59,6 +59,9 @@ func main() {
 		}
 	}()
 
+	// This ensures the connection is properly closed when you press Ctrl-C.
+	// Without listening to the signal to gracefully exit, the defer function
+	// conn.Close() will not run
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 	<-sigChan
